@@ -12,6 +12,20 @@ export const PERMISSIONS = {
     MANAGE_SETTINGS: "MANAGE_SETTINGS"
 }
 
+export const PERMISSION_LABELS: Record<string, string> = {
+    [PERMISSIONS.MANAGE_WISHES]: "Dilek Yönetimi",
+    [PERMISSIONS.MANAGE_EVENTS]: "Etkinlik Yönetimi",
+    [PERMISSIONS.MANAGE_PROJECTS]: "Proje Yönetimi",
+    [PERMISSIONS.MANAGE_TEAMS]: "Takım Yönetimi",
+    [PERMISSIONS.MANAGE_SUPPORT]: "Destek Yönetimi",
+    [PERMISSIONS.MANAGE_FEEDBACK]: "Geri Bildirim Yönetimi",
+    [PERMISSIONS.MANAGE_MESSAGES]: "Mesaj Yönetimi",
+    [PERMISSIONS.MANAGE_REPORTS]: "Rapor Yönetimi",
+    [PERMISSIONS.MANAGE_USERS]: "Kullanıcı Yönetimi",
+    [PERMISSIONS.MANAGE_ROLES]: "Rol ve Yetki Yönetimi",
+    [PERMISSIONS.MANAGE_SETTINGS]: "Ayarlar Yönetimi"
+}
+
 export const DEFAULT_PERMISSIONS = {
     ADMIN: [
         PERMISSIONS.MANAGE_WISHES,
@@ -27,10 +41,12 @@ export const DEFAULT_PERMISSIONS = {
         PERMISSIONS.MANAGE_SETTINGS
     ],
     MEMBER: [
-        PERMISSIONS.MANAGE_WISHES, // Can maybe vote/view?
+        PERMISSIONS.MANAGE_WISHES,
         PERMISSIONS.MANAGE_EVENTS,
         PERMISSIONS.MANAGE_TEAMS,
         PERMISSIONS.MANAGE_REPORTS
     ],
     USER: []
 }
+
+export type Permission = keyof typeof PERMISSIONS
