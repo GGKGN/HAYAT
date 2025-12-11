@@ -22,6 +22,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, permissions, isO
         { id: "users", name: "Kullanıcılar", icon: Users, permission: PERMISSIONS.MANAGE_USERS },
         { id: "roles", name: "Rol ve Yetkiler", icon: Shield, permission: PERMISSIONS.MANAGE_ROLES },
         { id: "settings", name: "Ayarlar", icon: Settings, permission: PERMISSIONS.MANAGE_SETTINGS },
+        { id: "volunteer", name: "Gönüllü Başvuruları", icon: Users, permission: PERMISSIONS.MANAGE_VOLUNTEERS },
     ]
 
     // Only show items that user has permission for (or if no permission required, though all ours do)

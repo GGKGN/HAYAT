@@ -70,3 +70,23 @@ export async function updateNavSettings(newOrder: any[]) {
         return { success: false, error: "Failed to update settings" }
     }
 }
+
+export async function getSiteSettings() {
+    return await prisma.siteSettings.findMany()
+}
+
+export async function updateSiteSetting(key: string, value: string) {
+    try {
+        await prisma.siteSettings.upsert({
+            where: { key },
+            update: { value },
+            create: { key, value }
+        })
+        revalidatePath("/")
+        revalidatePath("/admin")
+        return { success: true }
+    } catch (error) {
+        console.error("Failed to update site setting:", error)
+        return { success: false, error: "Failed to update setting" }
+    }
+}

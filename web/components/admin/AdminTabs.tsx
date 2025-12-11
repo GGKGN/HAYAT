@@ -43,6 +43,7 @@ import RolesTab from "./RolesTab"
 import { PERMISSIONS } from "@/lib/permissions"
 import DeleteMessageButton from "./DeleteMessageButton"
 import DeleteFeedbackButton from "./DeleteFeedbackButton"
+import VolunteerTab from "./VolunteerTab"
 
 function StatusBadge({ status }: { status: string }) {
     const styles = {
@@ -60,7 +61,7 @@ function StatusBadge({ status }: { status: string }) {
     )
 }
 
-export default function AdminTabs({ wishes, events, projects, users, messages, contactInfo, teamsData, navSettings, supportPackages, feedbacks, permissions }: any) {
+export default function AdminTabs({ wishes, events, projects, users, messages, contactInfo, teamsData, navSettings, supportPackages, feedbacks, permissions, volunteerData }: any) {
     const router = useRouter()
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [activeTab, setActiveTab] = useState("wishes")
@@ -203,6 +204,7 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
         if (activeTab === 'users' && !permissions?.includes(PERMISSIONS.MANAGE_USERS)) return <div className="p-8 text-center text-red-500 font-bold">Yetkiniz yok.</div>
         if (activeTab === 'roles' && !permissions?.includes(PERMISSIONS.MANAGE_ROLES)) return <div className="p-8 text-center text-red-500 font-bold">Yetkiniz yok.</div>
         if (activeTab === 'settings' && !permissions?.includes(PERMISSIONS.MANAGE_SETTINGS)) return <div className="p-8 text-center text-red-500 font-bold">Yetkiniz yok.</div>
+        if (activeTab === 'volunteer' && !permissions?.includes(PERMISSIONS.MANAGE_VOLUNTEERS)) return <div className="p-8 text-center text-red-500 font-bold">Yetkiniz yok.</div>
 
         switch (activeTab) {
             // ... cases ...
@@ -640,6 +642,8 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                 return <RolesTab />
             case "settings":
                 return <SettingsTab contactInfo={contactInfo} navSettings={navSettings} />
+            case "volunteer":
+                return <VolunteerTab questions={volunteerData?.questions || []} applications={volunteerData?.applications || []} isOpen={volunteerData?.isOpen || false} />
 
             default:
                 return null
@@ -683,7 +687,8 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                                                             activeTab === "roles" ? "Rol ve Yetkiler" :
                                                                 activeTab === "settings" ? "Ayarlar" :
                                                                     activeTab === "support" ? "Destek Paketleri" :
-                                                                        activeTab === "feedbacks" ? "Geri Bildirimler" : "Yönetim Paneli"
+                                                                        activeTab === "feedbacks" ? "Geri Bildirimler" :
+                                                                            activeTab === "volunteer" ? "Gönüllü Başvuruları" : "Yönetim Paneli"
                             }
                         </h1>
                         <p className="text-gray-500">

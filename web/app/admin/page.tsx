@@ -13,6 +13,9 @@ import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import { getMyPermissions } from "@/actions/permissions"
 
+import { getVolunteerApplications, getAllQuestions } from "@/actions/admin-volunteer"
+import { getSiteSettings } from "@/actions/settings"
+
 export const dynamic = 'force-dynamic'
 
 export default async function AdminPage() {
@@ -30,9 +33,15 @@ export default async function AdminPage() {
     const contactInfo = await getContactInfo()
     const teamsData = await getTeamsData()
     const navSettings = await getNavSettings()
-    const supportPackages = await getSupportPackages() // Added
+    const supportPackages = await getSupportPackages()
     const feedbacks = await getFeedbacks()
     const permissions = await getMyPermissions()
+
+    // Volunteer Data
+    const volunteerQuestions = await getAllQuestions()
+    const volunteerApplications = await getVolunteerApplications()
+    const siteSettings = await getSiteSettings()
+    const isVolunteerSystemOpen = siteSettings.find(s => s.key === "VOLUNTEER_SYS_OPEN")?.value === "true"
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -46,9 +55,14 @@ export default async function AdminPage() {
                 contactInfo={contactInfo}
                 teamsData={teamsData}
                 navSettings={navSettings}
-                supportPackages={supportPackages} // Added
+                supportPackages={supportPackages}
                 feedbacks={feedbacks}
                 permissions={permissions}
+                volunteerData={{
+                    questions: volunteerQuestions,
+                    applications: volunteerApplications,
+                    isOpen: isVolunteerSystemOpen
+                }}
             />
         </div>
     )

@@ -3,7 +3,7 @@
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { Camera, Loader2, User, ShieldCheck, Edit2 } from "lucide-react"
+import { Camera, Loader2, User, ShieldCheck, Edit2, Heart } from "lucide-react"
 import { uploadProfileImage } from "@/actions/upload"
 
 export default function ProfileHeader({ user }: { user: any }) {
@@ -175,6 +175,18 @@ export default function ProfileHeader({ user }: { user: any }) {
                             {user.role === 'ADMIN' ? 'Yönetici' : 'Üye'}
                         </span>
 
+
+
+                        {user.role === 'USER' && (
+                            <a
+                                href="/volunteer/apply"
+                                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-600 hover:bg-purple-100 transition-all text-xs font-bold border border-purple-100"
+                            >
+                                <Heart className="w-3 h-3" />
+                                <span>Gönüllü Ol</span>
+                            </a>
+                        )}
+
                         <button
                             onClick={() => setIsEditOpen(true)}
                             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-gray-600 hover:bg-primary hover:text-white transition-all text-xs font-bold"
@@ -190,6 +202,6 @@ export default function ProfileHeader({ user }: { user: any }) {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
