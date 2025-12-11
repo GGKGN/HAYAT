@@ -33,9 +33,18 @@ export default async function AdminPage() {
     const supportPackages = await getSupportPackages() // Added
     const feedbacks = await getFeedbacks()
     const permissions = await getMyPermissions()
+    console.log("DEBUG AdminPage Session:", JSON.stringify(session.user, null, 2))
+    console.log("DEBUG AdminPage Permissions:", JSON.stringify(permissions, null, 2))
 
     return (
         <div className="min-h-screen bg-gray-50">
+            {/* DEBUG SECTION */}
+            <div className="bg-black text-green-400 p-4 font-mono text-xs overflow-auto max-h-40">
+                <p>User ID: {session?.user?.id}</p>
+                <p>Role: {session?.user?.role}</p>
+                <p>Permissions Count: {permissions?.length}</p>
+                <p>Permissions: {JSON.stringify(permissions)}</p>
+            </div>
             <AdminTabs
                 wishes={wishes}
                 events={events}
