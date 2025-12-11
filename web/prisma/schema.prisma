@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+  USER
+}
+
+model RolePermission {
+  id          String   @id @default(cuid())
+  role        Role     @unique
+  permissions Json     // Stored as array of strings e.g. ["MANAGE_USERS", "VIEW_DASHBOARD"]
+  updatedAt   DateTime @updatedAt
+}
+
+enum WishStatus {
+  PENDING
+  IN_PROCESS
+  COMPLETED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(USER)
+  image     String?
+  title     String?
+  bio       String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  wishes      Wish[]
+  reports     Report[]
+  teamMembers TeamMember[]
+  visits      VisitSchedule[]
+}
+
+model Team {
+  id        String       @id @default(cuid())
+  name      String       @unique
+  members   TeamMember[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model TeamRole {
+  id        String       @id @default(cuid())
+  name      String       @unique
+  members   TeamMember[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  roleId    String
+  role      TeamRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, teamId]) // User can only have one role per team (optional constraint)
+}
+
+model Wish {
+  id          String     @id @default(cuid())
+  title       String
+  description String     @db.Text
+  url         String?    @db.Text
+  status      WishStatus @default(PENDING)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+}
+
+model Event {
+  id         String   @id @default(cuid())
+  title      String
+  date       DateTime
+  location   String
+  coverImage String?
+  isPast     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Report {
+  id               String   @id @default(cuid())
+  title            String
+  description      String?  @db.Text
+  filePath         String
+  uploadedAt       DateTime @default(now())
+  uploadedByUserId String
+  uploadedBy       User     @relation(fields: [uploadedByUserId], references: [id])
+  tags             Tag[]
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  reports   Report[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SupportPackage {
+  id        String   @id @default(cuid())
+  name      String
+  content   String
+  price     String
+  link      String
+  image     String?
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  image       String?
+  status      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SiteSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique // e.g. "ABOUT_US", "CONTACT_INFO"
+  value       String   @db.Text
+  updatedAt   DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ContactInfo {
+  id        String   @id @default(cuid())
+  email     String
+  phone     String
+  address   String
+  updatedAt DateTime @updatedAt
+}
+
+model VisitSchedule {
+  id         String   @id @default(cuid())
+  date       DateTime
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  experience String // TECRUBELI, GOZLEMCI
+  note       String?
+  createdAt  DateTime @default(now())
+
+  @@unique([date, userId])
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

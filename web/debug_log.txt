@@ -1,0 +1,15 @@
+[2025-12-10T09:48:45.423Z] Attempting to delete member cmiz9w5gc0008kna6n8yc5qxp
+[2025-12-10T09:48:45.430Z] Successfully deleted member cmiz9w5gc0008kna6n8yc5qxp
+[2025-12-10T09:50:19.323Z] Attempting to delete member cmiz5tyk6000bdpty3vh8j6vf
+[2025-12-10T09:50:19.328Z] Successfully deleted member cmiz5tyk6000bdpty3vh8j6vf
+[2025-12-10T09:56:31.277Z] Attempting to delete team cmiz5shms0002dptybbl1f96f
+[2025-12-10T09:56:31.280Z] Deleted members for team cmiz5shms0002dptybbl1f96f
+[2025-12-10T09:56:31.285Z] Successfully deleted team cmiz5shms0002dptybbl1f96f
+[2025-12-10T09:56:41.316Z] Attempting to delete role cmiz5t5it0007dptys57lzni9
+[2025-12-10T09:56:41.318Z] Deleted members for role cmiz5t5it0007dptys57lzni9
+[2025-12-10T09:56:41.322Z] Successfully deleted role cmiz5t5it0007dptys57lzni9
+[2025-12-10T10:00:14.017Z] Attempting to delete team cmiz5swrv0005dptyqhrxlflw
+[2025-12-10T10:00:14.019Z] Deleted members for team cmiz5swrv0005dptyqhrxlflw
+[2025-12-10T10:00:14.024Z] Successfully deleted team cmiz5swrv0005dptyqhrxlflw
+[2025-12-10T11:51:16.524Z] Attempting to delete member cmizy7ljg000kre7hxl2y1qso
+[2025-12-10T11:51:16.530Z] Successfully deleted member cmizy7ljg000kre7hxl2y1qso
