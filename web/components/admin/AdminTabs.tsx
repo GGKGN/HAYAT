@@ -638,7 +638,7 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
     }
 
     return (
-        <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto px-4 py-8 relative">
+        <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto px-4 py-8 pt-32 relative">
 
             {/* Mobile Header / Hamburger */}
             <div className="md:hidden flex items-center justify-between mb-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
