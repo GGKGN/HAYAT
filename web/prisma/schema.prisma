@@ -208,5 +208,16 @@ model VolunteerApplication {
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
 
+
   @@unique([userId, teamId]) // Limit one application per team per user, or just one active? Let's assume one active per team for now.
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
 }
