@@ -62,6 +62,7 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function AdminTabs({ wishes, events, projects, users, messages, contactInfo, teamsData, navSettings, supportPackages, feedbacks, permissions }: any) {
     const router = useRouter()
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [activeTab, setActiveTab] = useState("wishes")
     const [search, setSearch] = useState("")
 
@@ -84,6 +85,12 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
     async function handleUpdateWishStatus(id: string, newStatus: "PENDING" | "IN_PROCESS" | "COMPLETED") {
         await updateWishStatus(id, newStatus)
     }
+
+    // ... (rest of handlers removed for brevity, will be preserved by context match but better to be safe) 
+    // Wait, the tool requires contiguous replacement. I should target the RETURN statement of the component mainly, or just the state definition part and then the return part.
+    // I will do two edits. One for state, one for render.
+
+
 
     const handleCreateEventSubmit = async (formData: FormData) => {
         setIsUploading(true)
@@ -631,53 +638,71 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
     }
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} permissions={permissions} />
+        <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto px-4 py-8 relative">
 
-            <main className="flex-1 p-8 pt-36 ml-64 overflow-y-auto h-screen">
-                <div className="max-w-7xl mx-auto">
-
-                    {/* Header */}
-                    <div className="flex justify-between items-center mb-8">
-                        <div>
-                            <h1 className="text-3xl font-black text-gray-800 capitalize translate-y-1">
-                                {activeTab === 'teams' && 'Takım Yönetimi'}
-                                {activeTab === 'wishes' && 'Dilek Yönetimi'}
-                                {activeTab === 'events' && 'Etkinlikler'}
-                                {activeTab === 'projects' && 'Projeler'}
-                                {activeTab === 'users' && 'Kullanıcılar'}
-                                {activeTab === 'messages' && 'Mesaj Kutusu'}
-                                {activeTab === 'support' && 'Destek Ol'}
-                                {activeTab === 'feedbacks' && 'Geri Bildirimler'}
-                                {activeTab === 'roles' && 'Rol ve Yetki Yönetimi'}
-                                {activeTab === 'settings' && 'Ayarlar'}
-                            </h1>
-                            <p className="text-gray-500 text-sm mt-2">Yönetim paneline hoşgeldiniz.</p>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            {/* Show Search only if supported tab */}
-                            {['wishes', 'events', 'projects', 'users'].includes(activeTab) && (
-                                <div className="relative">
-                                    <Search className="w-5 h-5 absolute left-3 top-2.5 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        placeholder="Ara..."
-                                        className="pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-primary w-64 bg-white"
-                                        value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="animate-in fade-in zoom-in-95 duration-300">
-                        {renderContent()}
-                    </div>
-
+            {/* Mobile Header / Hamburger */}
+            <div className="md:hidden flex items-center justify-between mb-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-2">
+                    <LayoutDashboard className="w-5 h-5 text-primary" />
+                    <span className="font-bold text-gray-800">Yönetim Paneli</span>
                 </div>
-            </main>
+                <button onClick={() => setIsSidebarOpen(true)} className="p-2 bg-gray-50 rounded-lg text-gray-600">
+                    <MoreVertical className="w-5 h-5 rotate-90" />
+                </button>
+            </div>
+
+            <AdminSidebar
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                permissions={permissions}
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+            />
+
+            <div className="flex-1 min-w-0"> {/* min-w-0 ensures flex child can shrink below content size if needed (prevents table overflow blowout) */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                            {
+                                activeTab === "wishes" ? "Dilek Yönetimi" :
+                                    activeTab === "events" ? "Etkinlikler" :
+                                        activeTab === "projects" ? "Projeler" :
+                                            activeTab === "teams" ? "Takımlar" :
+                                                activeTab === "users" ? "Kullanıcılar" :
+                                                    activeTab === "messages" ? "Mesajlar" :
+                                                        activeTab === "reports" ? "Raporlar" :
+                                                            activeTab === "roles" ? "Rol ve Yetkiler" :
+                                                                activeTab === "settings" ? "Ayarlar" :
+                                                                    activeTab === "support" ? "Destek Paketleri" :
+                                                                        activeTab === "feedbacks" ? "Geri Bildirimler" : "Yönetim Paneli"
+                            }
+                        </h1>
+                        <p className="text-gray-500">
+                            {activeTab === "wishes" ? "Gelen dilekleri inceleyin ve durumlarını güncelleyin." : "Sistem verilerini buradan yönetebilirsiniz."}
+                        </p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                        {/* Show Search only if supported tab */}
+                        {['wishes', 'events', 'projects', 'users'].includes(activeTab) && (
+                            <div className="relative">
+                                <Search className="w-5 h-5 absolute left-3 top-2.5 text-gray-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Ara..."
+                                    className="pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-primary w-64 bg-white"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="animate-in fade-in zoom-in-95 duration-300">
+                    {renderContent()}
+                </div>
+            </div>
         </div>
     )
 }
+
