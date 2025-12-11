@@ -56,7 +56,7 @@ export default function AboutPage() {
                         </div>
                         <h3 className="text-2xl font-black text-gray-800 mb-4 group-hover:text-primary transition-colors">Ailemiz</h3>
                         <p className="text-gray-500 font-medium leading-relaxed">
-                            Farklı bölümlerden yüzlerce gönüllü üniversite öğrencisiyle her geçen gün büyüyen kocaman bir aileyiz.
+                            Tıp Fakültesinden yüzlerce gönüllü üniversite öğrencisiyle her geçen gün büyüyen kocaman bir aileyiz.
                         </p>
                     </div>
                 </div>

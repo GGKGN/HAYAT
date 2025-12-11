@@ -44,3 +44,23 @@ export async function deleteEvent(id: string) {
 export async function getEventsCount() {
     return await prisma.event.count()
 }
+
+export async function updateEvent(id: string, data: { title: string, location: string, date: Date, coverImage: string | null }) {
+    try {
+        await prisma.event.update({
+            where: { id },
+            data: {
+                title: data.title,
+                location: data.location,
+                date: data.date,
+                coverImage: data.coverImage
+            }
+        })
+        revalidatePath("/events")
+        revalidatePath("/admin")
+        return { success: true }
+    } catch (e) {
+        console.error("Update event error:", e)
+        return { error: "Failed to update event" }
+    }
+}
