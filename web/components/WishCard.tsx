@@ -76,7 +76,7 @@ export default function WishCard({ wish, onClick }: { wish: Wish; onClick?: () =
                     </div>
                     <div className="flex items-center">
                         <Calendar className="w-3 h-3 mr-1.5" />
-                        <span>{new Date(wish.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</span>
+                        <span suppressHydrationWarning>{new Date(wish.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</span>
                     </div>
                 </div>
 

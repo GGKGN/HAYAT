@@ -300,7 +300,7 @@ export default function ReportsView({ tags: initialTags, reports: initialReports
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-xs font-bold text-gray-700">{report.uploadedBy.name}</span>
-                                    <span className="text-[10px] text-gray-400">{new Date(report.uploadedAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</span>
+                                    <span className="text-[10px] text-gray-400" suppressHydrationWarning>{new Date(report.uploadedAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</span>
                                 </div>
                             </div>
 

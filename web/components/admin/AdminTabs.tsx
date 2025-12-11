@@ -210,7 +210,7 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="p-6 text-sm text-gray-500">{new Date(wish.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
+                                            <td className="p-6 text-sm text-gray-500" suppressHydrationWarning>{new Date(wish.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
                                             <td className="p-6 text-right">
                                                 <button onClick={() => deleteWish(wish.id)} className="text-gray-400 hover:text-red-500 transition-colors p-2">
                                                     <Trash2 className="w-4 h-4" />
@@ -271,7 +271,7 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                                         ) : (
                                             <div className="flex items-center justify-center h-full text-gray-300"><Calendar className="w-10 h-10" /></div>
                                         )}
-                                        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-gray-700">
+                                        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-gray-700" suppressHydrationWarning>
                                             {new Date(event.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}
                                         </div>
                                     </div>
@@ -387,7 +387,7 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                                                     <option value="ADMIN">ADMIN</option>
                                                 </select>
                                             </td>
-                                            <td className="p-6 text-sm text-gray-500">{new Date(user.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
+                                            <td className="p-6 text-sm text-gray-500" suppressHydrationWarning>{new Date(user.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
                                             <td className="p-6 text-right flex items-center justify-end gap-2">
                                                 <button onClick={() => deleteUser(user.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                                                     <Trash2 className="w-4 h-4" />
@@ -423,7 +423,7 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-xs text-gray-400 mr-2">{new Date(msg.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</span>
+                                            <span className="text-xs text-gray-400 mr-2" suppressHydrationWarning>{new Date(msg.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</span>
                                             <button
                                                 onClick={() => handleToggleMessageRead(msg.id, msg.isRead)}
                                                 className={`p-2 rounded-lg text-xs font-bold transition-colors ${msg.isRead ? 'bg-gray-100 text-gray-500' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}
@@ -537,7 +537,7 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                                             </div>
                                             <div>
                                                 <h3 className="font-bold text-gray-800">Anonim Geri Bildirim</h3>
-                                                <p className="text-xs text-gray-500">{new Date(fb.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                                                <p className="text-xs text-gray-500" suppressHydrationWarning>{new Date(fb.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                                             </div>
                                         </div>
                                         <DeleteFeedbackButton id={fb.id} />
