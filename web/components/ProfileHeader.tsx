@@ -2,10 +2,12 @@
 
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Camera, Loader2, User, ShieldCheck, Edit2 } from "lucide-react"
 import { uploadProfileImage } from "@/actions/upload"
 
 export default function ProfileHeader({ user }: { user: any }) {
+    const { update } = useSession()
     const [isEditOpen, setIsEditOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [isUploading, setIsUploading] = useState(false)
@@ -25,7 +27,12 @@ export default function ProfileHeader({ user }: { user: any }) {
         const formData = new FormData()
         formData.append("file", file)
 
-        await uploadProfileImage(user.id, formData)
+        const res = await uploadProfileImage(user.id, formData)
+
+        if (res.success && res.imageUrl) {
+            await update({ image: res.imageUrl })
+        }
+
         setIsUploading(false)
         router.refresh()
     }
