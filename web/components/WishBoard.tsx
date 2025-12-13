@@ -118,44 +118,92 @@ export default function WishBoard({ initialWishes }: { initialWishes: any[] }) {
                 </div>
             )}
 
-            {/* Wish Detail Modal */}
             <Modal
                 isOpen={!!selectedWish}
                 onClose={() => setSelectedWish(null)}
                 title={selectedWish?.title}
             >
                 {selectedWish && (
-                    <div className="space-y-6">
-                        {/* Status Badge */}
-                        <div className="flex items-center space-x-4">
-                            <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border ${getStatusColor(selectedWish.status)}`}>
-                                {selectedWish.status === 'COMPLETED' ? 'Gerçekleşti' : selectedWish.status === 'IN_PROCESS' ? 'Hazırlanıyor' : 'Bekliyor'}
-                            </span>
-                            <div className="flex items-center text-gray-500 text-sm font-medium">
-                                <Calendar className="w-4 h-4 mr-2" />
-                                {new Date(selectedWish.createdAt).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    <div className="space-y-8">
+                        {/* Image (if exists) */}
+                        {selectedWish.imageUrl && (
+                            <div className="rounded-2xl overflow-hidden shadow-md">
+                                <img src={selectedWish.imageUrl} alt={selectedWish.title} className="w-full h-auto object-cover max-h-80" />
                             </div>
+                        )}
+
+                        {/* Info Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* Status */}
+                            <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Durum</span>
+                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border ${getStatusColor(selectedWish.status)}`}>
+                                    {selectedWish.status === 'COMPLETED' ? 'Gerçekleşti' : selectedWish.status === 'IN_PROCESS' ? 'Hazırlanıyor' : 'Bekliyor'}
+                                </span>
+                            </div>
+
+                            {/* Estimated Date */}
+                            <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Tarih</span>
+                                <div className="flex items-center text-gray-800 font-bold">
+                                    <Calendar className="w-4 h-4 mr-2 text-gray-400" />
+                                    {selectedWish.estimatedDate
+                                        ? new Date(selectedWish.estimatedDate).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })
+                                        : new Date(selectedWish.createdAt).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })
+                                    }
+                                </div>
+                            </div>
+
+                            {/* Child Info (If visible) */}
+                            {(selectedWish.childName || selectedWish.childAge) && (
+                                <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
+                                    <span className="text-xs font-bold text-blue-400 uppercase tracking-wider block mb-1">Çocuk</span>
+                                    <div className="flex items-center text-blue-900 font-bold">
+                                        <User className="w-4 h-4 mr-2" />
+                                        <span>{selectedWish.childName || "İsimsiz"}</span>
+                                        {selectedWish.childAge && <span className="ml-2 bg-white px-2 py-0.5 rounded text-xs text-blue-600">{selectedWish.childAge} Yaş</span>}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Volunteer Info (If assigned) */}
+                            {selectedWish.volunteer && (
+                                <div className="bg-purple-50 p-4 rounded-2xl border border-purple-100">
+                                    <span className="text-xs font-bold text-purple-400 uppercase tracking-wider block mb-1">Gönüllü</span>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center overflow-hidden ring-2 ring-white">
+                                            {selectedWish.volunteer.image ? (
+                                                <img src={selectedWish.volunteer.image} alt="" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <User className="w-3 h-3 text-purple-300" />
+                                            )}
+                                        </div>
+                                        <span className="text-purple-900 font-bold text-sm">{selectedWish.volunteer.name}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Description */}
-                        <div className="prose prose-stone max-w-none">
-                            <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-wrap">
-                                {selectedWish.description}
-                            </p>
+                        <div>
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Detaylar</span>
+                            <div className="prose prose-stone max-w-none bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-wrap font-medium">
+                                    {selectedWish.description}
+                                </p>
+                            </div>
                         </div>
 
                         {/* User Info & Link */}
                         <div className="flex items-center justify-between pt-6 border-t border-gray-100">
                             <div className="flex items-center">
                                 <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mr-4 ring-2 ring-white shadow-sm overflow-hidden">
-                                    {selectedWish.user?.image ? (
-                                        <img src={selectedWish.user.image} alt={selectedWish.user.name || ""} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <User className="w-6 h-6 text-gray-400" />
-                                    )}
+                                    <div className="bg-gradient-to-br from-indigo-500 to-purple-500 w-full h-full flex items-center justify-center text-white text-lg font-bold">
+                                        {selectedWish.childName ? selectedWish.childName.charAt(0) : <User className="w-6 h-6" />}
+                                    </div>
                                 </div>
                                 <div>
-                                    <p className="text-sm font-bold text-gray-900">{selectedWish.user?.name || "Anonim"}</p>
+                                    <p className="text-sm font-bold text-gray-900">{selectedWish.childName || selectedWish.user?.name || "Anonim"}</p>
                                     <p className="text-xs text-gray-500 font-medium">Dilek Sahibi</p>
                                 </div>
                             </div>
@@ -168,7 +216,7 @@ export default function WishBoard({ initialWishes }: { initialWishes: any[] }) {
                                     className="inline-flex items-center px-6 py-3 bg-primary text-white text-sm font-bold rounded-xl hover:bg-green-600 transition-all shadow-md hover:shadow-lg group hover:-translate-y-0.5"
                                 >
                                     <ExternalLink className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                                    Dileği Gerçekleştir
+                                    Bağlantıya Git
                                 </a>
                             )}
                         </div>

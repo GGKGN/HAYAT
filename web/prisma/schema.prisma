@@ -26,6 +26,23 @@ enum WishStatus {
   COMPLETED
 }
 
+enum WishPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  INACTIVE
+}
+
+enum UserType {
+  STUDENT
+  DONOR
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -35,10 +52,18 @@ model User {
   image     String?
   title     String?
   bio       String?  @db.Text
+  
+  phoneNumber String?
+  status      UserStatus @default(ACTIVE)
+  userType    UserType   @default(STUDENT)
+  faculty     String?
+  grade       String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   wishes      Wish[]
+  assignedWishes Wish[] @relation("WishVolunteer")
   reports     Report[]
   teamMembers TeamMember[]
   visits      VisitSchedule[]
@@ -82,10 +107,20 @@ model Wish {
   description String     @db.Text
   url         String?    @db.Text
   status      WishStatus @default(PENDING)
+  priority    WishPriority @default(MEDIUM)
+  
+  childName     String?
+  childAge      Int?
+  estimatedDate DateTime?
+  imageUrl      String?
+
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   userId      String
   user        User       @relation(fields: [userId], references: [id])
+  
+  volunteerId String?
+  volunteer   User?      @relation("WishVolunteer", fields: [volunteerId], references: [id])
 }
 
 model Event {

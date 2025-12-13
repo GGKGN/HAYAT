@@ -10,6 +10,7 @@ export default function RegisterPage() {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
+    const [userType, setUserType] = useState<"STUDENT" | "DONOR">("STUDENT")
 
     const [password, setPassword] = useState("")
 
@@ -61,7 +62,7 @@ export default function RegisterPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-green-50 via-white to-green-50 relative overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center pt-32 pb-12 px-4 bg-gradient-to-br from-green-50 via-white to-green-50 relative overflow-hidden">
             {/* Background Decorations */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-3xl animate-pulse" />
@@ -87,6 +88,26 @@ export default function RegisterPage() {
                             {error}
                         </div>
                     )}
+
+                    <input type="hidden" name="userType" value={userType} />
+
+                    {/* User Type Toggle */}
+                    <div className="flex p-1 bg-gray-100 rounded-xl mb-6">
+                        <button
+                            type="button"
+                            onClick={() => setUserType("STUDENT")}
+                            className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all ${userType === 'STUDENT' ? 'bg-white shadow-sm text-primary' : 'text-gray-500 hover:bg-gray-200/50'}`}
+                        >
+                            🎓 Öğrenci
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setUserType("DONOR")}
+                            className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all ${userType === 'DONOR' ? 'bg-white shadow-sm text-primary' : 'text-gray-500 hover:bg-gray-200/50'}`}
+                        >
+                            ❤️ Bağışçı
+                        </button>
+                    </div>
 
                     <div className="space-y-4">
                         <div className="space-y-2">
@@ -118,6 +139,51 @@ export default function RegisterPage() {
                                 />
                             </div>
                         </div>
+
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-gray-700 ml-1">Telefon Numarası</label>
+                            <div className="relative group">
+                                <span className="absolute left-4 top-3.5 text-gray-400 font-bold group-focus-within:text-primary transition-colors">📞</span>
+                                <input
+                                    name="phoneNumber"
+                                    type="tel"
+                                    required
+                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-transparent focus:bg-white focus:border-primary/20 rounded-2xl outline-none transition-all font-medium text-gray-800 placeholder-gray-400"
+                                    placeholder="0555 555 55 55"
+                                />
+                            </div>
+                        </div>
+
+                        {userType === 'STUDENT' && (
+                            <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 ml-1">Fakülte</label>
+                                    <div className="relative group">
+                                        <span className="absolute left-4 top-3.5 text-gray-400 font-bold group-focus-within:text-primary transition-colors">🎓</span>
+                                        <input
+                                            name="faculty"
+                                            type="text"
+                                            required
+                                            className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-transparent focus:bg-white focus:border-primary/20 rounded-2xl outline-none transition-all font-medium text-gray-800 placeholder-gray-400"
+                                            placeholder="Tıp"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 ml-1">Sınıf</label>
+                                    <div className="relative group">
+                                        <span className="absolute left-4 top-3.5 text-gray-400 font-bold group-focus-within:text-primary transition-colors">📚</span>
+                                        <input
+                                            name="grade"
+                                            type="text"
+                                            required
+                                            className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-transparent focus:bg-white focus:border-primary/20 rounded-2xl outline-none transition-all font-medium text-gray-800 placeholder-gray-400"
+                                            placeholder="1. Sınıf"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="space-y-2">
                             <label className="text-sm font-bold text-gray-700 ml-1">Şifre</label>

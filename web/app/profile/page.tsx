@@ -2,9 +2,8 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
-import { createWish } from "@/actions/wishes"
 import { revalidatePath } from "next/cache"
-import { PlusCircle, Clock, CheckCircle2, PlayCircle, Loader2, Briefcase } from "lucide-react"
+import { PlusCircle, Clock, CheckCircle2, PlayCircle, Loader2, Briefcase, ArrowRight } from "lucide-react"
 import ProfileHeader from "@/components/ProfileHeader"
 
 export default async function ProfilePage() {
@@ -34,16 +33,7 @@ export default async function ProfilePage() {
 
     if (!user) return null
 
-    async function handleCreateWish(formData: FormData) {
-        "use server"
-        const title = formData.get("title") as string
-        const description = formData.get("description") as string
-        const url = formData.get("url") as string
-        if (session?.user?.id) {
-            await createWish(title, description, session.user.id, url)
-            revalidatePath("/profile")
-        }
-    }
+    // Old handleCreateWish removed since we moved logic to new page.
 
     return (
         <div className="min-h-screen bg-gray-50/50 pt-36 pb-20">
@@ -76,7 +66,7 @@ export default async function ProfilePage() {
                             </div>
                         )}
 
-                        {/* Wish Form - Only for MEMBER and ADMIN */}
+                        {/* Wish Link Card - Only for MEMBER and ADMIN */}
                         {(session.user.role === "ADMIN" || session.user.role === "MEMBER") && (
                             <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-8 sticky top-24">
                                 <div className="flex items-center gap-3 mb-6">
@@ -85,24 +75,13 @@ export default async function ProfilePage() {
                                     </div>
                                     <h3 className="text-xl font-bold text-gray-900">Yeni Dilek</h3>
                                 </div>
-
-                                <form action={handleCreateWish} className="space-y-4">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-bold text-gray-700 ml-1">Dilek Başlığı</label>
-                                        <input type="text" name="title" required className="w-full bg-gray-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/20 transition-all font-medium" placeholder="Örn: Kampüs Ağaçlandırması" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-bold text-gray-700 ml-1">Link (Opsiyonel)</label>
-                                        <input type="url" name="url" className="w-full bg-gray-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/20 transition-all font-medium" placeholder="https://..." />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-bold text-gray-700 ml-1">Detaylar</label>
-                                        <textarea name="description" required rows={4} className="w-full bg-gray-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/20 transition-all font-medium resize-none" placeholder="Dileğinizi anlatın..."></textarea>
-                                    </div>
-                                    <button type="submit" className="w-full bg-gray-900 text-white py-4 rounded-xl hover:bg-black transition-all hover:shadow-lg font-bold flex items-center justify-center gap-2">
-                                        Dileği Gönder <PlusCircle className="w-4 h-4" />
-                                    </button>
-                                </form>
+                                <p className="text-gray-500 font-medium text-sm mb-6 leading-relaxed">
+                                    Bir çocuğun hayalini gerçekleştirmek için yeni bir dilek oluşturun. Detaylı form sayfasına giderek tüm bilgileri girebilirsiniz.
+                                </p>
+                                <a href="/wishes/new" className="block w-full text-center bg-gray-900 text-white py-4 rounded-xl hover:bg-black transition-all hover:shadow-lg font-bold flex items-center justify-center gap-2 group">
+                                    Dilek Ekleme Sayfasına Git
+                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </a>
                             </div>
                         )}
                     </div>

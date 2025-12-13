@@ -86,7 +86,7 @@ export default function Navbar({ links }: NavbarProps) {
                 />
             )}
 
-            <div className={`mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ${scrolled
+            <div className={`mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 relative z-50 ${scrolled
                 ? "bg-white/80 backdrop-blur-lg shadow-lg rounded-full w-[calc(100%-2rem)] md:w-fit border border-white/50"
                 : "bg-transparent max-w-7xl w-full"
                 }`}>

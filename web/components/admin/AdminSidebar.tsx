@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, Calendar, FolderHeart, Settings, Gift, MessageSquare, CheckCircle, Layers, FileText, Shield, X } from "lucide-react"
+import { LayoutDashboard, Users, Calendar, FolderHeart, Settings, Gift, MessageSquare, CheckCircle, Layers, FileText, Shield, X, PieChart } from "lucide-react"
 import { PERMISSIONS } from "@/lib/permissions"
 
 type AdminSidebarProps = {
@@ -7,10 +7,12 @@ type AdminSidebarProps = {
     permissions: string[]
     isOpen?: boolean
     onClose?: () => void
+    isVolunteerOpen?: boolean
 }
 
-export default function AdminSidebar({ activeTab, setActiveTab, permissions, isOpen = false, onClose }: AdminSidebarProps) {
+export default function AdminSidebar({ activeTab, setActiveTab, permissions, isOpen = false, onClose, isVolunteerOpen = false }: AdminSidebarProps) {
     const menuItems = [
+        { id: "stats", name: "İstatistikler", icon: PieChart, permission: PERMISSIONS.VIEW_STATS },
         { id: "wishes", name: "Dilek Yönetimi", icon: CheckCircle, permission: PERMISSIONS.MANAGE_WISHES },
         { id: "events", name: "Etkinlikler", icon: Calendar, permission: PERMISSIONS.MANAGE_EVENTS },
         { id: "projects", name: "Projeler", icon: Layers, permission: PERMISSIONS.MANAGE_PROJECTS },
@@ -43,7 +45,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, permissions, isO
             <div className={`
                 fixed md:sticky top-0 md:top-24 left-0 h-full md:h-[calc(100vh-8rem)] 
                 w-64 bg-white md:rounded-3xl shadow-2xl md:shadow-sm border-r md:border border-gray-100 
-                flex flex-col z-[100] transform transition-transform duration-300 ease-in-out
+                flex flex-col z-[100] md:z-30 transform transition-transform duration-300 ease-in-out
                 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
             `}>
                 {/* Header - Fixed at top */}
@@ -88,11 +90,17 @@ export default function AdminSidebar({ activeTab, setActiveTab, permissions, isO
                 </div>
 
                 {/* Footer - Fixed at bottom */}
-                <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-100 mt-auto">
-                    <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-4">Sistem Durumu</div>
+                <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-100 mt-auto space-y-3">
+                    <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">Sistem Durumu</div>
+
                     <div className="flex items-center text-sm font-medium text-green-600 bg-green-50 px-3 py-2 rounded-lg">
                         <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
                         Sistem Aktif
+                    </div>
+
+                    <div className={`flex items-center text-sm font-medium px-3 py-2 rounded-lg ${isVolunteerOpen ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-gray-100'}`}>
+                        <span className={`w-2 h-2 rounded-full mr-2 ${isVolunteerOpen ? 'bg-blue-500 animate-pulse' : 'bg-gray-400'}`}></span>
+                        {isVolunteerOpen ? 'Gönüllü Alımı Açık' : 'Gönüllü Alımı Kapalı'}
                     </div>
                 </div>
             </div>

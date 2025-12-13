@@ -109,7 +109,11 @@ export async function getMyPermissions() {
     const hasLegacyPerm = perms.some(p => p === 'manage_wishes' || p === 'view_dashboard')
     const isMissingCriticalPerm = isAdmin && !perms.includes(PERMISSIONS.MANAGE_WISHES)
 
-    if (hasLegacyPerm || isMissingCriticalPerm) {
+    // Check if new defaults are missing (e.g. VIEW_STATS)
+    const defaultPerms = DEFAULT_PERMISSIONS[session.user.role as Role] || []
+    const isMissingDefaults = defaultPerms.some(dp => !perms.includes(dp))
+
+    if (hasLegacyPerm || isMissingCriticalPerm || isMissingDefaults) {
         console.log(`[Permissions] Detected legacy/broken permissions for ${session.user.role}. Fixing...`)
 
         // Use defaults

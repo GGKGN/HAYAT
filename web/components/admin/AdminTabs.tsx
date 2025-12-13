@@ -44,6 +44,10 @@ import { PERMISSIONS } from "@/lib/permissions"
 import DeleteMessageButton from "./DeleteMessageButton"
 import DeleteFeedbackButton from "./DeleteFeedbackButton"
 import VolunteerTab from "./VolunteerTab"
+import UserManagementTab from "./UserManagementTab"
+import WishManagementTab from "./WishManagementTab"
+import StatsTab from "./StatsTab"
+
 
 function StatusBadge({ status }: { status: string }) {
     const styles = {
@@ -205,8 +209,11 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
         if (activeTab === 'roles' && !permissions?.includes(PERMISSIONS.MANAGE_ROLES)) return <div className="p-8 text-center text-red-500 font-bold">Yetkiniz yok.</div>
         if (activeTab === 'settings' && !permissions?.includes(PERMISSIONS.MANAGE_SETTINGS)) return <div className="p-8 text-center text-red-500 font-bold">Yetkiniz yok.</div>
         if (activeTab === 'volunteer' && !permissions?.includes(PERMISSIONS.MANAGE_VOLUNTEERS)) return <div className="p-8 text-center text-red-500 font-bold">Yetkiniz yok.</div>
+        if (activeTab === 'stats' && !permissions?.includes(PERMISSIONS.VIEW_STATS)) return <div className="p-8 text-center text-red-500 font-bold">Yetkiniz yok.</div>
 
         switch (activeTab) {
+            case "stats":
+                return <StatsTab wishes={wishes} users={users} events={events} messages={messages} />
             // ... cases ...
             case "feedbacks":
                 return (
@@ -244,58 +251,7 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                 return <TeamsTab teams={teamsData.teams} roles={teamsData.roles} members={teamsData.members} users={users} />
 
             case "wishes":
-                const filteredWishes = filterData(wishes, ['title', 'status'])
-                return (
-                    <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left">
-                                <thead className="bg-gray-50/50 border-b border-gray-100">
-                                    <tr>
-                                        <th className="p-6 font-bold text-gray-600 text-sm">Başlık</th>
-                                        <th className="p-6 font-bold text-gray-600 text-sm">Kullanıcı</th>
-                                        <th className="p-6 font-bold text-gray-600 text-sm">Durum</th>
-                                        <th className="p-6 font-bold text-gray-600 text-sm">Tarih</th>
-                                        <th className="p-6 font-bold text-gray-600 text-sm text-right">İşlemler</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-50">
-                                    {filteredWishes.map((wish: any) => (
-                                        <tr key={wish.id} className="hover:bg-gray-50/50 transition-colors group">
-                                            <td className="p-6 font-bold text-gray-800">{wish.title}</td>
-                                            <td className="p-6 flex items-center">
-                                                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold mr-3">
-                                                    {wish.user?.name?.[0] || "?"}
-                                                </div>
-                                                <span className="text-sm text-gray-600">{wish.user?.name || "Anonim"}</span>
-                                            </td>
-                                            <td className="p-6">
-                                                <div className="flex items-center gap-2">
-                                                    <StatusBadge status={wish.status} />
-                                                    <div className="flex rounded-lg bg-gray-100 p-1">
-                                                        {(["PENDING", "IN_PROCESS", "COMPLETED"] as const).map(s => (
-                                                            <button
-                                                                key={s}
-                                                                onClick={() => handleUpdateWishStatus(wish.id, s)}
-                                                                className={`w-4 h-4 rounded-full ${wish.status === s ? 'ring-2 ring-white shadow-sm' : 'opacity-30 hover:opacity-100'} ${s === 'COMPLETED' ? 'bg-green-500' : s === 'IN_PROCESS' ? 'bg-blue-500' : 'bg-yellow-500'}`}
-                                                                title={s}
-                                                            />
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="p-6 text-sm text-gray-500" suppressHydrationWarning>{new Date(wish.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
-                                            <td className="p-6 text-right">
-                                                <button onClick={() => deleteWish(wish.id)} className="text-gray-400 hover:text-red-500 transition-colors p-2">
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )
+                return <WishManagementTab wishes={wishes} users={users} />
 
             case "events":
                 const filteredEvents = filterData(events, ['title', 'location'])
@@ -431,57 +387,7 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                 )
 
             case "users":
-                const filteredUsers = filterData(users, ['name', 'email', 'role'])
-                return (
-                    <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left">
-                                <thead className="bg-gray-50/50 border-b border-gray-100">
-                                    <tr>
-                                        <th className="p-6 font-bold text-gray-600 text-sm">Kullanıcı</th>
-                                        <th className="p-6 font-bold text-gray-600 text-sm">E-Posta</th>
-                                        <th className="p-6 font-bold text-gray-600 text-sm">Rol</th>
-                                        <th className="p-6 font-bold text-gray-600 text-sm">Kayıt Tarihi</th>
-                                        <th className="p-6 font-bold text-gray-600 text-sm text-right">İşlemler</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-50">
-                                    {filteredUsers.map((user: any) => (
-                                        <tr key={user.id} className="hover:bg-gray-50/50 transition-colors">
-                                            <td className="p-6 flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-black text-gray-500">
-                                                    {user.name?.[0]}
-                                                </div>
-                                                <span className="font-bold text-gray-800">{user.name}</span>
-                                            </td>
-                                            <td className="p-6 text-sm text-gray-600">{user.email}</td>
-                                            <td className="p-6">
-                                                <select
-                                                    value={user.role}
-                                                    onChange={(e) => handleUserRoleUpdate(user.id, e.target.value as "ADMIN" | "MEMBER" | "USER")}
-                                                    className={`px-3 py-2 rounded-lg text-xs font-bold border-none outline-none cursor-pointer transition-colors ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
-                                                        user.role === 'MEMBER' ? 'bg-blue-100 text-blue-800' :
-                                                            'bg-gray-100 text-gray-800'
-                                                        }`}
-                                                >
-                                                    <option value="USER">USER</option>
-                                                    <option value="MEMBER">MEMBER</option>
-                                                    <option value="ADMIN">ADMIN</option>
-                                                </select>
-                                            </td>
-                                            <td className="p-6 text-sm text-gray-500" suppressHydrationWarning>{new Date(user.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
-                                            <td className="p-6 text-right flex items-center justify-end gap-2">
-                                                <button onClick={() => deleteUser(user.id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )
+                return <UserManagementTab users={users} />
 
             case "messages":
                 return (
@@ -670,47 +576,51 @@ export default function AdminTabs({ wishes, events, projects, users, messages, c
                 permissions={permissions}
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
+                isVolunteerOpen={volunteerData?.isOpen}
             />
 
             <div className="flex-1 min-w-0"> {/* min-w-0 ensures flex child can shrink below content size if needed (prevents table overflow blowout) */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                            {
-                                activeTab === "wishes" ? "Dilek Yönetimi" :
-                                    activeTab === "events" ? "Etkinlikler" :
-                                        activeTab === "projects" ? "Projeler" :
-                                            activeTab === "teams" ? "Takımlar" :
-                                                activeTab === "users" ? "Kullanıcılar" :
+                {activeTab !== 'users' && (
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                                {
+                                    activeTab === "wishes" ? "Dilek Yönetimi" :
+                                        activeTab === "events" ? "Etkinlikler" :
+                                            activeTab === "projects" ? "Projeler" :
+                                                activeTab === "teams" ? "Takımlar" :
                                                     activeTab === "messages" ? "Mesajlar" :
                                                         activeTab === "reports" ? "Raporlar" :
                                                             activeTab === "roles" ? "Rol ve Yetkiler" :
                                                                 activeTab === "settings" ? "Ayarlar" :
                                                                     activeTab === "support" ? "Destek Paketleri" :
                                                                         activeTab === "feedbacks" ? "Geri Bildirimler" :
-                                                                            activeTab === "volunteer" ? "Gönüllü Başvuruları" : "Yönetim Paneli"
-                            }
-                        </h1>
-                        <p className="text-gray-500">
-                            {activeTab === "wishes" ? "Gelen dilekleri inceleyin ve durumlarını güncelleyin." : "Sistem verilerini buradan yönetebilirsiniz."}
-                        </p>
+                                                                            activeTab === "stats" ? "Gösterge Paneli" :
+                                                                                activeTab === "volunteer" ? "Gönüllü Başvuruları" : "Yönetim Paneli"
+                                }
+                            </h1>
+                            <p className="text-gray-500">
+                                {activeTab === "stats" ? "Sistemin genel durumu ve istatistiklere göz atın." :
+                                    activeTab === "wishes" ? "Gelen dilekleri inceleyin ve durumlarını güncelleyin." : "Sistem verilerini buradan yönetebilirsiniz."}
+                            </p>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            {/* Show Search only if supported tab */}
+                            {['wishes', 'events', 'projects'].includes(activeTab) && (
+                                <div className="relative">
+                                    <Search className="w-5 h-5 absolute left-3 top-2.5 text-gray-400" />
+                                    <input
+                                        type="text"
+                                        placeholder="Ara..."
+                                        className="pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-primary w-64 bg-white"
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-4">
-                        {/* Show Search only if supported tab */}
-                        {['wishes', 'events', 'projects', 'users'].includes(activeTab) && (
-                            <div className="relative">
-                                <Search className="w-5 h-5 absolute left-3 top-2.5 text-gray-400" />
-                                <input
-                                    type="text"
-                                    placeholder="Ara..."
-                                    className="pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-primary w-64 bg-white"
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                />
-                            </div>
-                        )}
-                    </div>
-                </div>
+                )}
 
                 <div className="animate-in fade-in zoom-in-95 duration-300">
                     {renderContent()}
