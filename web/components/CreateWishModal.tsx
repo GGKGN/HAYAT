@@ -12,12 +12,9 @@ export default function CreateWishModal({ userId }: { userId: string }) {
 
     async function handleSubmit(formData: FormData) {
         setIsLoading(true)
-        const title = formData.get("title") as string
-        const description = formData.get("description") as string
-        const url = formData.get("url") as string
 
         try {
-            await createWish(title, description, userId, url)
+            await createWish(formData)
             setIsOpen(false)
             router.refresh()
         } catch (error) {
